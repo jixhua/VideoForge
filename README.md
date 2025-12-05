@@ -2,6 +2,8 @@
 
 基于 Go + FFmpeg 的跨平台视频处理服务，支持转码、转封装、裁剪和缩略图生成。
 
+该项目全部由 Qoder 生成，仅在Windows 11上测试过，[体验 Qoder](https://qoder.com/referral?referral_code=r3IgKyqSpv6c4Y1L5VaIycTyUx402bDp)
+
 ## 功能特性
 
 - ✅ HTTP/WebSocket 服务
@@ -30,7 +32,7 @@ go mod download
 go run main.go
 ```
 
-访问 http://localhost:8080
+访问 <http://localhost:8080>
 
 ## 配置
 
