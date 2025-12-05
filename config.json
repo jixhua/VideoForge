@@ -1,0 +1,14 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 9999
+  },
+  "ffmpeg": {
+    "path": "D:\\FFmpeg\\ffmpeg.exe",
+    "defaultOutputDir": "./output"
+  },
+  "database": {
+    "path": "./videoforge.db"
+  },
+  "videoRootDir": "./videos"
+}

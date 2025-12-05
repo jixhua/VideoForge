@@ -1,0 +1,400 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #333;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    color: #667eea;
+    font-size: 28px;
+}
+
+.connection-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot.online {
+    background: #10b981;
+    box-shadow: 0 0 10px #10b981;
+}
+
+.status-dot.offline {
+    background: #ef4444;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.panel {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.panel h2 {
+    margin-bottom: 15px;
+    color: #667eea;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 10px;
+}
+
+.panel h3 {
+    margin: 15px 0 10px 0;
+    color: #555;
+}
+
+.path-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.path-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.path-input button, button {
+    padding: 10px 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.path-input button:hover, button:hover {
+    background: #5568d3;
+}
+
+.file-list {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.file-item {
+    padding: 10px;
+    margin: 5px 0;
+    background: #f9fafb;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.file-item:hover {
+    background: #e5e7eb;
+}
+
+.file-item.directory {
+    cursor: pointer;
+    background: #eff6ff;
+}
+
+.file-item.video {
+    background: #f0fdf4;
+}
+
+.file-name {
+    flex: 1;
+    font-size: 14px;
+}
+
+.file-actions button {
+    padding: 5px 10px;
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+.batch-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.batch-actions select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.batch-actions label {
+    display: block;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.batch-actions input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.btn-primary {
+    width: 100%;
+    background: #10b981 !important;
+}
+
+.btn-primary:hover {
+    background: #059669 !important;
+}
+
+.tasks-toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.tasks-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.task-item {
+    padding: 15px;
+    margin: 10px 0;
+    background: #f9fafb;
+    border-radius: 5px;
+    border-left: 4px solid #667eea;
+}
+
+.task-item.pending {
+    border-left-color: #6b7280;
+}
+
+.task-item.running {
+    border-left-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.task-item.finished {
+    border-left-color: #10b981;
+    background: #f0fdf4;
+}
+
+.task-item.error {
+    border-left-color: #ef4444;
+    background: #fef2f2;
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.task-type {
+    display: inline-block;
+    padding: 4px 8px;
+    background: #667eea;
+    color: white;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.task-status {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.task-path {
+    font-size: 13px;
+    color: #666;
+    margin: 5px 0;
+    word-break: break-all;
+}
+
+.task-progress {
+    margin-top: 10px;
+}
+
+.task-progress-bar {
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.task-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.3s;
+}
+
+.task-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.task-actions button {
+    padding: 5px 15px;
+    font-size: 12px;
+}
+
+.progress-panel {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.progress-panel h3 {
+    margin-bottom: 15px;
+    color: #667eea;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.progress-bar {
+    height: 30px;
+    background: #e5e7eb;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+    transition: width 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+.progress-message {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #666;
+    font-family: monospace;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 800px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+#videoPlayer {
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+.param-input {
+    margin: 10px 0;
+}
+
+.param-input label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.param-input input, .param-input select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #5568d3;
+}

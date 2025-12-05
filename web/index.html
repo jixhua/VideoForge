@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoForge - 视频处理服务</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎬 VideoForge 视频处理服务</h1>
+            <div class="connection-status">
+                <span id="wsStatus" class="status-dot offline"></span>
+                <span id="wsStatusText">未连接</span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- 左侧面板：目录浏览 -->
+            <div class="panel browser-panel">
+                <h2>📁 目录浏览</h2>
+                <div class="path-input">
+                    <input type="text" id="directoryPath" placeholder="输入目录路径" value="">
+                    <button onclick="browsePath()">浏览</button>
+                    <button onclick="goParentDirectory()">上级</button>
+                </div>
+                <div id="fileList" class="file-list"></div>
+                
+                <div class="batch-actions">
+                    <h3>批量操作</h3>
+                    <select id="batchTaskType">
+                        <option value="transcode">转码</option>
+                        <option value="remux">转封装</option>
+                        <option value="trim">裁剪</option>
+                        <option value="thumbnail">生成缩略图</option>
+                    </select>
+                    
+                    <div id="taskParamsForm"></div>
+                    
+                    <label>
+                        <input type="checkbox" id="batchRecursive">
+                        递归扫描子目录
+                    </label>
+                    <label>
+                        <input type="checkbox" id="batchDeleteOriginal">
+                        处理后删除原文件
+                    </label>
+                    <button onclick="batchAddTasks()" class="btn-primary">批量添加任务</button>
+                </div>
+            </div>
+
+            <!-- 右侧面板：任务管理 -->
+            <div class="panel tasks-panel">
+                <h2>📋 任务列表</h2>
+                <div class="tasks-toolbar">
+                    <button onclick="refreshTasks()">刷新</button>
+                    <button onclick="clearFinishedTasks()">清除已完成</button>
+                </div>
+                <div id="tasksList" class="tasks-list"></div>
+            </div>
+        </div>
+
+        <!-- 当前进度 -->
+        <div class="progress-panel">
+            <h3>当前进度</h3>
+            <div id="currentProgress">
+                <div class="progress-info">
+                    <span id="currentFile">等待任务...</span>
+                    <span id="currentPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progressBarFill" class="progress-bar-fill"></div>
+                </div>
+                <div id="progressMessage" class="progress-message"></div>
+            </div>
+        </div>
+
+        <!-- 视频预览模态框 -->
+        <div id="videoModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeVideoModal()">&times;</span>
+                <h2 id="videoTitle"></h2>
+                <video id="videoPlayer" controls></video>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
