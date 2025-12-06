@@ -213,7 +213,7 @@ func (f *FFmpeg) runWithProgress(inputPath string, args []string, callback Progr
 			line := scanner.Text()
 
 			// 调试输出 FFmpeg 日志，便于确认 stderr 被正确捕获
-			log.Printf("ffmpeg stderr: %s", line)
+			// log.Printf("ffmpeg stderr: %s", line)
 
 			if matches := progressRe.FindStringSubmatch(line); len(matches) >= 4 {
 				hours, _ := strconv.ParseFloat(matches[1], 64)

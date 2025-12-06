@@ -24,6 +24,7 @@ type TaskQueue struct {
 	currentTask *models.Task
 	currentCmd  *exec.Cmd
 	cancelMu    sync.Mutex
+	canceledTasks map[int64]bool
 }
 
 func NewTaskQueue(db *database.DB, ffmpegPath string, progressCallback func(models.ProgressUpdate)) *TaskQueue {
@@ -33,6 +34,7 @@ func NewTaskQueue(db *database.DB, ffmpegPath string, progressCallback func(mode
 		taskChan:   make(chan *models.Task, 100),
 		isRunning:  false,
 		progressCb: progressCallback,
+		canceledTasks: make(map[int64]bool),
 	}
 }
 
@@ -107,6 +109,16 @@ func (tq *TaskQueue) processLoop() {
 // processTask 处理单个任务
 func (tq *TaskQueue) processTask(task *models.Task) {
 	log.Printf("Processing task %d: %s (%s)", task.ID, task.InputPath, task.Type)
+
+	// 如果任务已被取消（在队列中但尚未开始），直接跳过
+	tq.cancelMu.Lock()
+	if tq.canceledTasks[task.ID] {
+		delete(tq.canceledTasks, task.ID)
+		tq.cancelMu.Unlock()
+		log.Printf("Task %d canceled before start, skipping", task.ID)
+		return
+	}
+	tq.cancelMu.Unlock()
 
 	// 更新状态为运行中
 	tq.db.UpdateTaskStatus(task.ID, models.TaskStatusRunning, 0, "")
@@ -232,11 +244,14 @@ func (tq *TaskQueue) CancelTask(id int64) error {
 	tq.cancelMu.Lock()
 	defer tq.cancelMu.Unlock()
 
-	if tq.currentTask == nil || tq.currentTask.ID != id {
-		return nil
-	}
-	if tq.currentCmd != nil && tq.currentCmd.Process != nil {
-		return tq.currentCmd.Process.Kill()
+	// 标记为取消，以便尚未开始的任务被跳过
+	tq.canceledTasks[id] = true
+
+	// 如果当前正在运行的是该任务，尝试 Kill 进程
+	if tq.currentTask != nil && tq.currentTask.ID == id {
+		if tq.currentCmd != nil && tq.currentCmd.Process != nil {
+			return tq.currentCmd.Process.Kill()
+		}
 	}
 	return nil
 }

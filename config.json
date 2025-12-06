@@ -4,7 +4,7 @@
     "port": 9999
   },
   "ffmpeg": {
-    "path": "D:\\FFmpeg\\ffmpeg.exe",
+    "path": "D:\\FFmpeg\\8.0\\bin\\ffmpeg.exe",
     "defaultOutputDir": "./output"
   },
   "database": {

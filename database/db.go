@@ -75,7 +75,7 @@ func (db *DB) CreateTask(task *models.Task) error {
 func (db *DB) GetTask(id int64) (*models.Task, error) {
 	task := &models.Task{}
 	err := db.conn.QueryRow(`
-		SELECT id, input_path, output_path, type, params, status, progress, error_log, delete_original, created_at, updated_at
+		SELECT id, input_path, output_path, type, COALESCE(params,'') AS params, status, progress, COALESCE(error_log,'') AS error_log, delete_original, created_at, updated_at
 		FROM tasks WHERE id = ?
 	`, id).Scan(&task.ID, &task.InputPath, &task.OutputPath, &task.Type, &task.Params,
 		&task.Status, &task.Progress, &task.ErrorLog, &task.DeleteOriginal, &task.CreatedAt, &task.UpdatedAt)
@@ -88,8 +88,8 @@ func (db *DB) GetTask(id int64) (*models.Task, error) {
 
 func (db *DB) GetAllTasks() ([]*models.Task, error) {
 	rows, err := db.conn.Query(`
-		SELECT id, input_path, output_path, type, params, status, progress, error_log, delete_original, created_at, updated_at
-		FROM tasks ORDER BY created_at DESC
+		SELECT id, input_path, output_path, type, COALESCE(params,'') AS params, status, progress, COALESCE(error_log,'') AS error_log, delete_original, created_at, updated_at
+		FROM tasks ORDER BY created_at ASC
 	`)
 	if err != nil {
 		return nil, err
@@ -111,7 +111,7 @@ func (db *DB) GetAllTasks() ([]*models.Task, error) {
 
 func (db *DB) GetPendingTasks() ([]*models.Task, error) {
 	rows, err := db.conn.Query(`
-		SELECT id, input_path, output_path, type, params, status, progress, error_log, delete_original, created_at, updated_at
+		SELECT id, input_path, output_path, type, COALESCE(params,'') AS params, status, progress, COALESCE(error_log,'') AS error_log, delete_original, created_at, updated_at
 		FROM tasks WHERE status IN ('pending', 'running') ORDER BY created_at ASC
 	`)
 	if err != nil {
