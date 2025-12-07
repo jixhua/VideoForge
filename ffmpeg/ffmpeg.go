@@ -41,7 +41,7 @@ type ThumbnailParams struct {
 }
 
 type RemuxParams struct {
-	OutputExtension string `json:"outputExtension"` // 例如: "mp4", "flv", "ts", "wav"
+	OutputExtension string `json:"outputExtension"` // 例如: "mp4", "flv", "ts"
 }
 
 // ProgressCallback 进度回调函数
