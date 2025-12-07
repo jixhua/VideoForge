@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // WebSocket 连接
 function connectWebSocket() {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    const wsUrl = `${protocol}//${window.location.host}/videoforge/ws`;
     
     ws = new WebSocket(wsUrl);
     
@@ -85,7 +85,7 @@ async function browsePath() {
     const path = document.getElementById('directoryPath').value || '';
     
     try {
-        const response = await fetch(`/api/browse?path=${encodeURIComponent(path)}`);
+        const response = await fetch(`/videoforge/api/browse?path=${encodeURIComponent(path)}`);
         const data = await response.json();
         
         if (response.ok) {
@@ -316,7 +316,7 @@ async function batchAddTasks() {
     const params = getTaskParams();
     
     try {
-        const response = await fetch('/api/tasks/batch', {
+        const response = await fetch('/videoforge/api/tasks/batch', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -364,7 +364,7 @@ async function addSingleTask(inputPath) {
     }
 
     try {
-        const response = await fetch('/api/tasks', {
+        const response = await fetch('/videoforge/api/tasks', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -395,7 +395,7 @@ async function addSingleTask(inputPath) {
 // 刷新任务列表
 async function refreshTasks() {
     try {
-        const response = await fetch('/api/tasks');
+        const response = await fetch('/videoforge/api/tasks');
         const data = await response.json();
         
         if (response.ok) {
@@ -472,7 +472,7 @@ async function deleteTask(taskId) {
     }
     
     try {
-        const response = await fetch(`/api/tasks/${taskId}`, {
+        const response = await fetch(`/videoforge/api/tasks/${taskId}`, {
             method: 'DELETE'
         });
         
@@ -512,7 +512,7 @@ function previewVideo(filePath, title) {
     const videoTitle = document.getElementById('videoTitle');
     
     videoTitle.textContent = title;
-    videoPlayer.src = `/api/files/${encodeURIComponent(filePath)}`;
+    videoPlayer.src = `/videoforge/api/files/${encodeURIComponent(filePath)}`;
     modal.style.display = 'block';
 }
 
