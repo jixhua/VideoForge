@@ -356,28 +356,22 @@ func generateOutputPath(inputPath string, taskType models.TaskType, outputDir st
 		}
 	}
 
-	var suffix string
 	var ext string
 
 	switch taskType {
 	case models.TaskTypeTranscode:
-		suffix = "_transcoded"
 		ext = ".mp4"
 	case models.TaskTypeRemux:
-		suffix = "_remuxed"
 		if outputExtFromParams != "" {
 			ext = outputExtFromParams
 		} else {
 			ext = ".mp4"
 		}
 	case models.TaskTypeTrim:
-		suffix = "_trimmed"
 		ext = filepath.Ext(baseName)
 	case models.TaskTypeThumbnail:
-		suffix = "_thumbs"
 		ext = "" // 缩略图目录
 	default:
-		suffix = "_processed"
 		ext = filepath.Ext(baseName)
 	}
 
@@ -386,8 +380,8 @@ func generateOutputPath(inputPath string, taskType models.TaskType, outputDir st
 	}
 
 	if taskType == models.TaskTypeThumbnail {
-		return filepath.Join(outputDir, nameWithoutExt+suffix)
+		return filepath.Join(outputDir, nameWithoutExt+"_thumbs")
 	}
 
-	return filepath.Join(outputDir, nameWithoutExt+suffix+ext)
+	return filepath.Join(outputDir, nameWithoutExt+ext)
 }
