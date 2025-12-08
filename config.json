@@ -1,10 +1,10 @@
 {
   "server": {
     "host": "0.0.0.0",
-    "port": 9999
+    "port": 18999
   },
   "ffmpeg": {
-    "path": "D:\\FFmpeg\\8.0\\bin\\ffmpeg.exe",
+    "path": "/mnt/data/videoforge/ffmpeg-n8.0/bin/ffmpeg",
     "defaultOutputDir": "./output"
   },
   "database": {

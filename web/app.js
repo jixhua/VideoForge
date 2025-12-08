@@ -76,8 +76,8 @@ function handleProgressUpdate(update) {
         document.getElementById('progressMessage').textContent = `错误: ${update.message}`;
     }
     
-    // 刷新任务列表
-    refreshTasks();
+    // 更新任务列表中对应的任务
+    updateTaskInList(update);
 }
 
 // 浏览目录
@@ -357,7 +357,7 @@ async function addSingleTask(inputPath) {
         const fileName = inputPath.split(/[\\/]/).pop();
         const nameWithoutExt = fileName.replace(/\.[^/.]+$/, '');
         const outputExt = params.outputExtension ? `.${params.outputExtension}` : '.mp4';
-        outputPath = `./output/${nameWithoutExt}_remuxed${outputExt}`;
+        outputPath = `./output/${nameWithoutExt}${outputExt}`;
     } else {
         const fileName = inputPath.split(/[\\/]/).pop();
         outputPath = `./output/${fileName}`;
@@ -389,6 +389,28 @@ async function addSingleTask(inputPath) {
     } catch (error) {
         console.error('添加任务失败:', error);
         alert('添加任务失败');
+    }
+}
+
+// 更新任务列表中的特定任务
+function updateTaskInList(update) {
+    // 查找对应的任务
+    const taskIndex = tasks.findIndex(t => t.id === update.taskId);
+    
+    if (taskIndex !== -1) {
+        // 更新任务数据
+        tasks[taskIndex].status = update.status;
+        tasks[taskIndex].progress = update.progress || tasks[taskIndex].progress;
+        
+        if (update.status === 'error' && update.message) {
+            tasks[taskIndex].errorLog = update.message;
+        }
+        
+        // 重新渲染任务列表
+        displayTasks();
+    } else if (update.status === 'pending') {
+        // 新任务添加，刷新整个列表
+        refreshTasks();
     }
 }
 
@@ -477,7 +499,9 @@ async function deleteTask(taskId) {
         });
         
         if (response.ok) {
-            refreshTasks();
+            // 从本地数组中移除任务
+            tasks = tasks.filter(t => t.id !== taskId);
+            displayTasks();
         } else {
             alert('删除失败');
         }

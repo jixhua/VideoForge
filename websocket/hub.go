@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"sync"
+	"time"
 	"videoforge/models"
 
 	"github.com/gorilla/websocket"
@@ -25,9 +26,12 @@ type Hub struct {
 }
 
 type Client struct {
-	hub  *Hub
-	conn *websocket.Conn
-	send chan models.ProgressUpdate
+	hub          *Hub
+	conn         *websocket.Conn
+	send         chan models.ProgressUpdate
+	lastUpdate   models.ProgressUpdate
+	lastSendTime time.Time
+	mu           sync.Mutex
 }
 
 func NewHub() *Hub {
@@ -95,21 +99,35 @@ func (c *Client) writePump() {
 		c.conn.Close()
 	}()
 
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	var pendingMessage *models.ProgressUpdate
+
 	for {
-		message, ok := <-c.send
-		if !ok {
-			c.conn.WriteMessage(websocket.CloseMessage, []byte{})
-			return
-		}
+		select {
+		case message, ok := <-c.send:
+			if !ok {
+				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
+				return
+			}
+			// 保存最新的消息，但不立即发送
+			pendingMessage = &message
 
-		data, err := json.Marshal(message)
-		if err != nil {
-			log.Printf("Failed to marshal message: %v", err)
-			continue
-		}
+		case <-ticker.C:
+			// 每秒检查是否有待发送的消息
+			if pendingMessage != nil {
+				data, err := json.Marshal(pendingMessage)
+				if err != nil {
+					log.Printf("Failed to marshal message: %v", err)
+					continue
+				}
 
-		if err := c.conn.WriteMessage(websocket.TextMessage, data); err != nil {
-			return
+				if err := c.conn.WriteMessage(websocket.TextMessage, data); err != nil {
+					return
+				}
+				pendingMessage = nil
+			}
 		}
 	}
 }
