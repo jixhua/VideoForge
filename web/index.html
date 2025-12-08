@@ -52,7 +52,12 @@
 
             <!-- 右侧面板：任务管理 -->
             <div class="panel tasks-panel">
-                <h2>📋 任务列表</h2>
+                <div class="tasks-header">
+                    <h2>📋 任务列表</h2>
+                    <div id="taskStats" class="task-stats">
+                        <span id="taskStatsText">已完成 0/0</span>
+                    </div>
+                </div>
                 <div class="tasks-toolbar">
                     <button onclick="refreshTasks()">刷新</button>
                     <button onclick="clearFinishedTasks()">清除已完成</button>

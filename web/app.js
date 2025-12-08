@@ -435,8 +435,16 @@ function displayTasks() {
     
     if (!tasks || tasks.length === 0) {
         tasksList.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">暂无任务</p>';
+        updateTaskStats(0, 0);
         return;
     }
+    
+    // 计算已完成任务数
+    const finishedCount = tasks.filter(t => t.status === 'finished').length;
+    const totalCount = tasks.length;
+    
+    // 更新统计信息
+    updateTaskStats(finishedCount, totalCount);
     
     tasksList.innerHTML = tasks.map(task => {
         const statusText = {
@@ -485,6 +493,14 @@ function displayTasks() {
             </div>
         `;
     }).join('');
+}
+
+// 更新任务统计信息
+function updateTaskStats(finishedCount, totalCount) {
+    const statsText = document.getElementById('taskStatsText');
+    if (statsText) {
+        statsText.textContent = `已完成 ${finishedCount}/${totalCount}`;
+    }
 }
 
 // 删除任务
