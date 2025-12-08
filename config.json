@@ -5,7 +5,8 @@
   },
   "ffmpeg": {
     "path": "/mnt/data/videoforge/ffmpeg-n8.0/bin/ffmpeg",
-    "defaultOutputDir": "./output"
+    "defaultOutputDir": "./output",
+    "threads": 3
   },
   "database": {
     "path": "./videoforge.db"

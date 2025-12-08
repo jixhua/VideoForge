@@ -16,10 +16,14 @@ import (
 
 type FFmpeg struct {
 	BinaryPath string
+	Threads    int
 }
 
-func NewFFmpeg(binaryPath string) *FFmpeg {
-	return &FFmpeg{BinaryPath: binaryPath}
+func NewFFmpeg(binaryPath string, threads int) *FFmpeg {
+	return &FFmpeg{
+		BinaryPath: binaryPath,
+		Threads:    threads,
+	}
 }
 
 // TaskParams 任务参数
@@ -185,6 +189,11 @@ func (f *FFmpeg) runWithProgress(inputPath string, args []string, callback Progr
 		"-nostats",
 		"-loglevel", "error",
 	}, args...)
+
+	// 添加线程数限制，防止 CPU 100%
+	if f.Threads > 0 {
+		args = append([]string{"-threads", strconv.Itoa(f.Threads)}, args...)
+	}
 
 	cmd := exec.Command(f.BinaryPath, args...)
 

@@ -27,13 +27,13 @@ type TaskQueue struct {
 	canceledTasks map[int64]bool
 }
 
-func NewTaskQueue(db *database.DB, ffmpegPath string, progressCallback func(models.ProgressUpdate)) *TaskQueue {
+func NewTaskQueue(db *database.DB, ffmpegPath string, threads int, progressCallback func(models.ProgressUpdate)) *TaskQueue {
 	return &TaskQueue{
-		db:         db,
-		ffmpeg:     ffmpeg.NewFFmpeg(ffmpegPath),
-		taskChan:   make(chan *models.Task, 100),
-		isRunning:  false,
-		progressCb: progressCallback,
+		db:            db,
+		ffmpeg:        ffmpeg.NewFFmpeg(ffmpegPath, threads),
+		taskChan:      make(chan *models.Task, 100),
+		isRunning:     false,
+		progressCb:    progressCallback,
 		canceledTasks: make(map[int64]bool),
 	}
 }

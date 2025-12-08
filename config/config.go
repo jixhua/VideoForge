@@ -13,6 +13,7 @@ type Config struct {
 	FFmpeg struct {
 		Path             string `json:"path"`
 		DefaultOutputDir string `json:"defaultOutputDir"`
+		Threads          int    `json:"threads"`
 	} `json:"ffmpeg"`
 	Database struct {
 		Path string `json:"path"`

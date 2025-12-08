@@ -31,7 +31,7 @@ func main() {
 	go hub.Run()
 
 	// 创建任务队列
-	queue := worker.NewTaskQueue(db, config.GlobalConfig.FFmpeg.Path, func(update models.ProgressUpdate) {
+	queue := worker.NewTaskQueue(db, config.GlobalConfig.FFmpeg.Path, config.GlobalConfig.FFmpeg.Threads, func(update models.ProgressUpdate) {
 		hub.Broadcast(update)
 	})
 	queue.Start()
@@ -84,6 +84,7 @@ func main() {
 	addr := fmt.Sprintf("%s:%d", config.GlobalConfig.Server.Host, config.GlobalConfig.Server.Port)
 	log.Printf("Starting VideoForge server on http://%s", addr)
 	log.Printf("FFmpeg path: %s", config.GlobalConfig.FFmpeg.Path)
+	log.Printf("FFmpeg threads: %d", config.GlobalConfig.FFmpeg.Threads)
 	log.Printf("Database: %s", config.GlobalConfig.Database.Path)
 
 	// 确保必要的目录存在
