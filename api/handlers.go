@@ -241,6 +241,9 @@ func (s *Server) DeleteTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 检查是否需要删除输出文件（默认为 true）
+	deleteOutput := r.URL.Query().Get("deleteOutput") != "false"
+
 	// 获取任务信息，用于删除输出文件
 	task, err := s.db.GetTask(id)
 	if err != nil {
@@ -256,8 +259,8 @@ func (s *Server) DeleteTask(w http.ResponseWriter, r *http.Request) {
 	// 等待一小段时间，确保进程已完全终止并释放文件句柄
 	time.Sleep(100 * time.Millisecond)
 
-	// 删除输出文件（如果存在）
-	if task != nil && task.OutputPath != "" {
+	// 根据参数决定是否删除输出文件
+	if deleteOutput && task != nil && task.OutputPath != "" {
 		if err := os.RemoveAll(task.OutputPath); err != nil {
 			log.Printf("Failed to delete output file %s: %v", task.OutputPath, err)
 		} else {

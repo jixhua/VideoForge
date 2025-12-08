@@ -504,13 +504,14 @@ function updateTaskStats(finishedCount, totalCount) {
 }
 
 // 删除任务
-async function deleteTask(taskId) {
+async function deleteTask(taskId, deleteOutput = true) {
     if (!confirm('确定要删除此任务吗？')) {
         return;
     }
     
     try {
-        const response = await fetch(`/videoforge/api/tasks/${taskId}`, {
+        const url = `/videoforge/api/tasks/${taskId}${deleteOutput ? '' : '?deleteOutput=false'}`;
+        const response = await fetch(url, {
             method: 'DELETE'
         });
         
@@ -532,16 +533,25 @@ async function clearFinishedTasks() {
     const finishedTasks = tasks.filter(t => t.status === 'finished');
     
     if (finishedTasks.length === 0) {
-        alert('没有已完成的任务');
-        return;
+        return; // 静默返回，不显示提示
     }
     
-    if (!confirm(`确定要删除 ${finishedTasks.length} 个已完成的任务吗？`)) {
-        return;
-    }
-    
-    for (const task of finishedTasks) {
-        await deleteTask(task.id);
+    // 直接删除，不弹出确认提示，也不删除输出文件
+    try {
+        const deletePromises = finishedTasks.map(task => 
+            fetch(`/videoforge/api/tasks/${task.id}?deleteOutput=false`, {
+                method: 'DELETE'
+            })
+        );
+        
+        await Promise.all(deletePromises);
+        
+        // 从本地数组中移除已完成的任务
+        tasks = tasks.filter(t => t.status !== 'finished');
+        displayTasks();
+    } catch (error) {
+        console.error('清除任务失败:', error);
+        alert('清除任务失败');
     }
 }
 
